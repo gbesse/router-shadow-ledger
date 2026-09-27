@@ -1,0 +1,12 @@
+{
+  "group": {
+    "id": "opus-anywhere",
+    "models": ["vendor-a/strong", "vendor-b/strong"],
+    "routing": "order",
+    "stays": "off"
+  },
+  "events": [
+    {"id": "req-1", "available_models": ["vendor-a/strong", "vendor-b/strong"], "chosen": "vendor-b/strong"},
+    {"id": "req-2", "available_models": ["vendor-b/strong"], "chosen": "vendor-b/strong"}
+  ]
+}

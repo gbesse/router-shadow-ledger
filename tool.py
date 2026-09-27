@@ -39,9 +39,41 @@ def check(data):
     return {'ok': not findings, 'average_cost_regret': round(average_regret, 4), 'segments': segments, 'requests': rows, 'findings': findings}
 
 
+def audit_magpie_group(data):
+    """Audit supplied route observations against a documented Magpie group."""
+    group = data['group']
+    models = group['models']
+    if not models or len(set(models)) != len(models):
+        raise ValueError('group models must be unique and nonempty')
+    findings = []
+    unchecked = 0
+    for event in data['events']:
+        chosen = event['chosen']
+        available = event['available_models']
+        if chosen not in models:
+            findings.append(f'{event["id"]}: chosen model is not in group')
+        if chosen not in available:
+            findings.append(f'{event["id"]}: chosen model was not reported available')
+        if group['routing'] == 'order' and group.get('stays', 'off') == 'off':
+            eligible = [model for model in models if model in available]
+            if not eligible:
+                findings.append(f'{event["id"]}: no configured model was available')
+            elif chosen != eligible[0]:
+                findings.append(f'{event["id"]}: order policy expected {eligible[0]}, got {chosen}')
+        else:
+            unchecked += 1
+    return {'ok': not findings, 'events': len(data['events']), 'policy_unverified_events': unchecked,
+            'findings': findings}
+
+
 def main():
-    if len(sys.argv) < 2 or sys.argv[1] not in ('demo', 'check'):
-        raise SystemExit('usage: tool.py demo | check REQUESTS.json')
+    if len(sys.argv) < 2 or sys.argv[1] not in ('demo', 'check', 'magpie-demo', 'audit-magpie'):
+        raise SystemExit('usage: tool.py demo | check REQUESTS.json | magpie-demo | audit-magpie EVENTS.json')
+    if sys.argv[1] in ('magpie-demo', 'audit-magpie'):
+        path = Path(__file__).parent / 'examples/magpie-order-events.json' if sys.argv[1] == 'magpie-demo' else Path(sys.argv[2])
+        result = audit_magpie_group(json.loads(path.read_text()))
+        print(json.dumps(result, indent=2))
+        return 0 if sys.argv[1] == 'magpie-demo' or result['ok'] else 1
     path = Path(__file__).parent / 'examples/requests.json' if sys.argv[1] == 'demo' else Path(sys.argv[2])
     result = check(json.loads(path.read_text()))
     print(json.dumps(result, indent=2))

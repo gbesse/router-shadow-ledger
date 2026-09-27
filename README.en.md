@@ -25,6 +25,17 @@ Python 3.11+; no external package required. / Python 3.11+ ; aucune dépendance 
 
 The ledger requires observed counterfactual outcomes for each compared model. It finds minimum cost among outcomes satisfying quality and latency limits; it does not infer missing outcomes.
 
+## Magpie-related demo
+
+The second check uses a group configuration and route observations supplied by the user. For Magpie's [`routing=order`, `stays=off` policy](https://github.com/yetone/magpie#routing-groups), it checks that the first available model was chosen:
+
+```bash
+python3 tool.py magpie-demo
+python3 tool.py audit-magpie examples/magpie-order-events.json
+```
+
+The fixture is synthetic; no Magpie log or local secret is read. For `smart`, `usage`, `rotate` or a pinned conversation, the report counts events whose policy could not be checked rather than inferring missing quota state.
+
 ## Tests
 
 ```bash

@@ -25,6 +25,17 @@ Python 3.11+; no external package required. / Python 3.11+ ; aucune dépendance 
 
 El registro exige resultados contrafactuales observados para cada modelo comparado. Encuentra el coste mínimo entre resultados que cumplen límites de calidad y latencia; no infiere resultados ausentes.
 
+## Demo relacionada con Magpie
+
+El segundo control usa una configuración de grupo y observaciones de rutas aportadas por el usuario. Para la política [`routing=order`, `stays=off` de Magpie](https://github.com/yetone/magpie#routing-groups), comprueba que se eligió el primer modelo disponible:
+
+```bash
+python3 tool.py magpie-demo
+python3 tool.py audit-magpie examples/magpie-order-events.json
+```
+
+El ejemplo es sintético; no se lee ningún registro de Magpie ni secreto local. Para `smart`, `usage`, `rotate` o una conversación fijada, el informe cuenta los eventos cuya política no se pudo verificar, sin inferir cuotas ausentes.
+
 ## Pruebas
 
 ```bash
