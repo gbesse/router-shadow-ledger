@@ -1,0 +1,7 @@
+{
+  "max_average_regret": 0.03,
+  "requests": [
+    {"id":"a","segment":"simple","chosen":"fast","quality_floor":0.8,"latency_ceiling_ms":800,"outcomes":[{"model":"fast","quality":0.9,"cost":0.02,"latency_ms":300},{"model":"strong","quality":0.95,"cost":0.09,"latency_ms":700}]},
+    {"id":"b","segment":"critical","chosen":"slow-cheap","quality_floor":0.9,"latency_ceiling_ms":500,"outcomes":[{"model":"slow-cheap","quality":0.95,"cost":0.03,"latency_ms":900},{"model":"fast-safe","quality":0.92,"cost":0.06,"latency_ms":400}]}
+  ]
+}
